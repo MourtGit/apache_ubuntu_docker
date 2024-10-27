@@ -1,0 +1,30 @@
+# Dockerfile to containerize or dockerize an Apache webserver
+
+# Invoke Base image
+FROM ubuntu:latest
+
+# Optional LABEL
+LABEL Description="Apache on ubuntu docker image"
+
+# update all packages
+RUN apt-get -y update
+
+# for remove time zone
+ARG DEBIAN_FRONTEND=noninteractive  
+
+# Install apache webserver
+RUN apt-get -y install apache2
+# this also can be used: RUN apt-get update && apt-get install -y apache2
+
+# Copy web app from local to the container
+COPY index.html /var/www/html
+
+# Port on which the app should listen
+EXPOSE 80
+
+# Equivalent of "systemctl start httpd". With ENTRYPOINT, the process will run after 
+# container starts. With CMD, the process could be overriden.
+# for ubuntu you'll replace "httpd" with "apache2"
+
+CMD /usr/sbin/apache2ctl -D FOREGROUND
+# CMD [ "apache2ctl", "-D", "FOREGROUND"] 
